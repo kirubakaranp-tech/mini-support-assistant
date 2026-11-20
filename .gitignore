@@ -7,3 +7,4 @@ venv/
 .idea/
 .vscode/
 orders.db
+data/chroma/

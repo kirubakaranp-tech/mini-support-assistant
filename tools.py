@@ -1,6 +1,7 @@
 import json
 
 from orders_db import find_order
+from rag import search
 
 CUSTOMERS = {
     1: {"id": 1, "name": "Sixer Sundar", "plan": "Basic", "email": "sundar@example.com"},
@@ -25,9 +26,18 @@ def get_order_status(order_id):
     return {"found": True, "order": order}
 
 
+def search_manual(question):
+    chunks = search(question)
+    return {
+        "found": True,
+        "chunks": [{"page": chunk["page"], "text": chunk["text"]} for chunk in chunks],
+    }
+
+
 TOOL_FUNCTIONS = {
-    "get_customer": (get_customer, "customer_id"),
-    "get_order_status": (get_order_status, "order_id"),
+    "get_customer": (get_customer, "customer_id", int),
+    "get_order_status": (get_order_status, "order_id", int),
+    "search_manual": (search_manual, "question", str),
 }
 
 TOOL_SCHEMAS = [
@@ -55,6 +65,19 @@ TOOL_SCHEMAS = [
             },
         },
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_manual",
+            "description": "Search the CloudDesk user manual. Use it for questions about how CloudDesk works, "
+                           "plans, prices, security, billing rules, the API and support.",
+            "parameters": {
+                "type": "object",
+                "properties": {"question": {"type": "string", "description": "What to look up in the manual"}},
+                "required": ["question"],
+            },
+        },
+    },
 ]
 
 
@@ -62,11 +85,14 @@ def run_tool(name, arguments_text):
     if name not in TOOL_FUNCTIONS:
         return {"error": f"Unknown tool: {name}"}
 
-    function, argument_name = TOOL_FUNCTIONS[name]
+    function, argument_name, argument_type = TOOL_FUNCTIONS[name]
+    kind = "a whole number" if argument_type is int else "a text"
     try:
         arguments = json.loads(arguments_text or "{}")
-        value = int(arguments[argument_name])
+        value = argument_type(arguments[argument_name])
     except (json.JSONDecodeError, KeyError, TypeError, ValueError):
-        return {"error": f"{name} needs a whole number {argument_name}."}
+        return {"error": f"{name} needs {kind} {argument_name}."}
 
+    if argument_type is str and not value.strip():
+        return {"error": f"{name} needs {kind} {argument_name}."}
     return function(value)

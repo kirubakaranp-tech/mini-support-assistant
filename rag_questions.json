@@ -1,0 +1,12 @@
+[
+  {"question": "How long is the password reset link valid?", "expected": ["1 hour", "one hour"], "page": 7},
+  {"question": "How much does the Standard plan cost per user per month?", "expected": ["999"], "page": 2},
+  {"question": "How long is the free trial?", "expected": ["14"], "page": 2},
+  {"question": "How many API requests per minute can a Premium workspace send?", "expected": ["1,000", "1000"], "page": 9},
+  {"question": "How long do deleted tasks stay in the Trash?", "expected": ["30 days"], "page": 4},
+  {"question": "When is the support team available?", "expected": ["9 am", "9am", "9:00"], "page": 10},
+  {"question": "Is there a CloudDesk desktop app for Linux?", "expected": null, "page": null},
+  {"question": "How much does the Enterprise plan cost?", "expected": null, "page": null},
+  {"question": "Who is the CEO of CloudDesk?", "expected": null, "page": null},
+  {"question": "Can I export my projects to Microsoft Project?", "expected": null, "page": null}
+]
