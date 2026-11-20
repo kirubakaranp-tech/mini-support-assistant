@@ -1,0 +1,12 @@
+{"ticket": "I was charged twice for my March subscription. Please refund one of the payments.", "category": "Billing"}
+{"ticket": "Our account was suspended because an invoice was not paid. Please turn it back on.", "category": "Billing"}
+{"ticket": "Please change the company address that is printed on our invoices.", "category": "Billing"}
+{"ticket": "We need 3 more seats for new hires who start on Monday.", "category": "Billing"}
+{"ticket": "The CSV export button shows 'Error 500' every time I click it.", "category": "Technical"}
+{"ticket": "The login page shows '502 Bad Gateway' for everyone in our team.", "category": "Technical"}
+{"ticket": "The Stripe integration stopped sending payment receipts to our customers.", "category": "Technical"}
+{"ticket": "Your API returns 401 Unauthorized even though my API key is correct.", "category": "Technical"}
+{"ticket": "I forgot my password and the reset email never arrives.", "category": "Account"}
+{"ticket": "The codes from my authenticator app are always rejected when I sign in.", "category": "Account"}
+{"ticket": "How do I give my colleague admin rights in our workspace?", "category": "Account"}
+{"ticket": "I want to close my account and delete all my data.", "category": "Account"}
