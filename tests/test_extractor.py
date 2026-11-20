@@ -39,7 +39,7 @@ def test_urgency_must_be_1_to_5(urgency):
 
 
 def test_success_on_first_attempt(capsys):
-    fake_ask, calls = answers(json.dumps(GOOD))
+    fake_ask, _ = answers(json.dumps(GOOD))
 
     result = extract_ticket_info("ticket text", ask=fake_ask)
 
@@ -81,7 +81,7 @@ def test_clear_failure_after_3_attempts():
 
 
 def test_model_call_error_does_not_crash():
-    fake_ask, calls = answers(RuntimeError("rate limit"))
+    fake_ask, _ = answers(RuntimeError("rate limit"))
 
     result = extract_ticket_info("ticket text", ask=fake_ask)
 

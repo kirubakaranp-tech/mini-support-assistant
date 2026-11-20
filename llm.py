@@ -28,3 +28,14 @@ def ask_json(messages):
         temperature=0,
     )
     return response.choices[0].message.content or ""
+
+
+def chat_with_tools(messages, tools):
+    client = OpenAI(max_retries=5)
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=messages,
+        tools=tools,
+        temperature=0,
+    )
+    return response.choices[0].message

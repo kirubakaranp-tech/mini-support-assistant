@@ -71,6 +71,38 @@ The model often gets it right the first time. To always see a retry, run
 `python run_extraction.py --demo-retry`. It changes the model's first answer for ticket 1
 to urgency 10, so you can watch the error being sent back and fixed.
 
+## Part 3: Tool calling
+
+The model decides by itself when to use two tools:
+
+| Tool | Data from | Result |
+|---|---|---|
+| `get_customer(customer_id)` | the `CUSTOMERS` dictionary in `tools.py` | name, plan and email |
+| `get_order_status(order_id)` | the `orders` table in a SQLite file, `orders.db` | status and dates |
+
+Every tool returns clean JSON: `{"found": true, ...}` with the data, or `{"found": false, "error": "..."}`.
+
+`assistant.py` runs the tool loop. It sends the question with the tool schemas, runs every tool
+the model asks for, sends back the results and repeats until the model answers (at most 5 rounds).
+
+Safety:
+
+- An unknown id returns `There is no customer with id 99.` instead of an error.
+- A tool name that does not exist returns `Unknown tool: ...` instead of crashing.
+- Ids must be whole numbers, and the SQL uses a `?` parameter, so the model never writes SQL.
+
+```
+python run_tools.py
+```
+
+It creates `orders.db` and asks the test question, an unknown customer and an unknown order:
+
+```
+Question: Which plan is customer 2 on and where is order 1042?
+Tool: get_customer(2) | Tool: get_order_status(1042)
+Answer: Customer 2 is on the Premium plan and order 1042 is out for delivery.
+```
+
 ## Setup
 
 ```
