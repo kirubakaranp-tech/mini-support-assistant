@@ -35,6 +35,42 @@ v1: 9/12 (75%) | v2: 12/12 (100%)
 v2 got all 12 right. The plain v1 prompt guesses on tickets that depend on the company's own
 rules, and it does not always answer in a form a program can read.
 
+## Part 2: Structured output with validation
+
+`extractor.py` turns a free-text ticket into a `TicketInfo` object:
+
+| Field | Rule |
+|---|---|
+| `customer_name` | text, not empty |
+| `product` | text, not empty |
+| `issue_type` | `Billing`, `Technical` or `Account` |
+| `urgency` | whole number from 1 to 5 |
+| `summary` | text, not empty |
+
+How it works:
+
+1. The ticket is sent with `prompts/extractor.txt` in JSON mode at temperature 0.
+2. The reply is checked with `TicketInfo.model_validate_json`.
+3. If the check fails, the error is sent back to the model with the request to fix it.
+   This is tried up to 3 times.
+4. After 3 failed attempts it returns a failure result with the errors. It never crashes,
+   even if the model call itself fails.
+
+```
+python run_extraction.py
+```
+
+It extracts the 5 tickets in `tickets.json` and prints every attempt, for example:
+
+```
+Attempt 1: validation error (urgency must be 1-5)
+Attempt 2: success
+```
+
+The model often gets it right the first time. To always see a retry, run
+`python run_extraction.py --demo-retry`. It changes the model's first answer for ticket 1
+to urgency 10, so you can watch the error being sent back and fixed.
+
 ## Setup
 
 ```

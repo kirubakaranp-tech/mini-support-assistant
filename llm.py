@@ -17,3 +17,14 @@ def ask(prompt, temperature=0):
     )
     answer = response.choices[0].message.content or ""
     return answer.strip()
+
+
+def ask_json(messages):
+    client = OpenAI(max_retries=5)
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=messages,
+        response_format={"type": "json_object"},
+        temperature=0,
+    )
+    return response.choices[0].message.content or ""
